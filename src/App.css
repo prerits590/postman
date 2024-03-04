@@ -1,0 +1,130 @@
+:root {
+  --bg-ant: #2580ff;
+  --bg-ant-hover: #4290fc;
+}
+
+.ant-searchbar .ant-input-group-addon {
+  background-color: var(--bg-ant);
+  border: none;
+}
+
+.ant-searchbar .ant-input-group-addon:hover {
+  background-color: var(--bg-ant-hover);
+}
+
+.ant-searchbar .ant-input {
+  border: 1px solid rgb(202, 196, 196);
+}
+
+.bg-ant {
+  background-color: var(--bg-ant);
+}
+
+.bg-ant-1 {
+  background-color: var(--bg-ant);
+}
+
+.bg-ant:hover {
+  background-color: var(--bg-ant-hover);
+}
+
+.ant-select-item-option {
+  color: black !important;
+
+}
+
+.ant-searchbar .ant-input::placeholder {
+  font-size: small;
+}
+
+.ant-searchbar .ant-select-selection-item,
+.ant-searchbar .ant-select-arrow {
+  color: whitesmoke;
+  font-weight: 500;
+
+}
+
+.ant-searchbar .ant-select-open .ant-select-selection-item {
+  color: whitesmoke;
+  font-weight: 500;
+
+}
+
+.btn-req-active .bg-ant {
+  position: relative;
+  background-color: #1574fa;
+}
+
+.bg-dark {
+  /* background-color: #001529 !important;
+  color: whitesmoke !important;
+
+  .ant-layout-sider-trigger {
+    background-color: #002140 !important;
+  } */
+}
+
+.ant-layout-sider-trigger {
+  background-color: var(--bg-ant) !important;
+
+}
+
+.ant-collapse-item {
+  border-radius: 0 !important;
+}
+
+.btn-success {
+  color: white;
+  background-color: #22C55E;
+}
+
+.btn-danger {
+  color: white;
+  background-color: #EF4444;
+}
+
+.btn-danger:hover {
+  color: var(--bg-ant);
+}
+
+.btn-success:hover {
+  color: var(--bg-ant);
+}
+
+.ant-collapse-item-active .ant-collapse-header {
+  background-color: var(--bg-ant);
+  color: white !important;
+}
+
+.ant-collapse-header:hover {
+  background: rgba(37, 128, 255, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  color: white !important;
+}
+
+.ant-collapse-content-box:hover {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ant-collapse-content-box {
+  padding: 0.8rem !important;
+}
+
+.ant-collapse-content-box div {
+  padding-top: 0px !important;
+}
+
+.bg-glass {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+}
