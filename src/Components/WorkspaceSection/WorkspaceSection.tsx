@@ -127,7 +127,6 @@ const WorkspaceSection: React.FC<Props> = () => {
                 text={req.endPoint ? req.endPoint : "http://google.com"}
                 req={req.method ? req.method.toUpperCase() : "GET"}
                 icon={<CrossIcon className="text-gray-300" />}
-                indexToRemove={index}
               />
             </div>
           </div>

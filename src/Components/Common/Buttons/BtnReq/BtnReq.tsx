@@ -4,7 +4,6 @@ interface Props {
   text: string | null;
   req: string;
   icon: ReactNode;
-  indexToRemove: number;
   onClickFunction: () => void;
 }
 
@@ -12,7 +11,6 @@ const BtnReq: React.FC<Props> = ({
   text,
   icon,
   req,
-  indexToRemove,
   onClickFunction,
 }) => {
   return (
