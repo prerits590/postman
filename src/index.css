@@ -19,7 +19,9 @@ code {
 .ant-btn-primary:not([disabled]) {
   background: #2580ff !important;
 }
-
+.ant-btn-danger:not([disabled]) {
+  background: #ff5005 !important;
+}
 .ant-btn-primary:not([disabled]):hover {
   background: #4290fc !important;
 }

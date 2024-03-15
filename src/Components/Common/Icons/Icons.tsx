@@ -11,6 +11,9 @@ import {
   EditOutlined as PenIcon,
   TeamOutlined as PeopleIcon,
   DeleteFilled as DeleteIcon,
+  FolderOpenOutlined as OpenFolderIcon,
+  SaveOutlined as SaveIcon,
+  CommentOutlined as CommentIcon,
 } from "@ant-design/icons";
 
 export {
@@ -26,4 +29,7 @@ export {
   PenIcon,
   PeopleIcon,
   DeleteIcon,
+  OpenFolderIcon,
+  SaveIcon,
+  CommentIcon,
 };

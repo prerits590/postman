@@ -7,9 +7,18 @@ export const UiContext = createContext<UiDataContextValue>(
 export const UiProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDark, setIsDark] = useState(true);
-
+  const [showTooltip, setShowTooltip] = useState(true);
   return (
-    <UiContext.Provider value={{ isDark, isLoading, setIsDark, setIsLoading }}>
+    <UiContext.Provider
+      value={{
+        isDark,
+        isLoading,
+        showTooltip,
+        setIsDark,
+        setIsLoading,
+        setShowTooltip,
+      }}
+    >
       {children}
     </UiContext.Provider>
   );

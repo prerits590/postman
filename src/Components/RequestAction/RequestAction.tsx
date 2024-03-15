@@ -4,18 +4,19 @@ interface Props {
   text: string | null;
   req: string;
   icon: ReactNode;
-  onClickFunction: () => void;
+  indexToRemove: number;
+  onClick: () => void;
 }
 
-const BtnReq: React.FC<Props> = ({
+const RequestAction: React.FC<Props> = ({
   text,
   icon,
   req,
-  onClickFunction,
+  onClick,
 }) => {
   return (
     <div>
-      <div className=" bg-ant flex rounded-t-lg items-center sm:py-1 py-2 px-2 cursor-pointer">
+      <div className=" bg-ant flex items-center sm:py-1 py-2 px-2 cursor-pointer">
         <div className=" text-gray-200 px-2 font-semibold sm:text-base text-sm">
           <p>{req}</p>
         </div>
@@ -23,7 +24,7 @@ const BtnReq: React.FC<Props> = ({
           <p>{text}</p>
         </div>
         <div className="">
-          <button onClick={onClickFunction} className="flex items-center">
+          <button onClick={onClick} className="flex items-center">
             {icon}
           </button>
         </div>
@@ -32,4 +33,4 @@ const BtnReq: React.FC<Props> = ({
   );
 };
 
-export default BtnReq;
+export default RequestAction;

@@ -1,36 +1,47 @@
 import { Collapse } from "antd";
 import { DownIcon } from "../Icons/Icons";
+// import { ReactNode } from "react";
+
+interface Item {
+  id: string;
+  method: string;
+  endPoint: string;
+  time: Date;
+}
 
 interface Props {
-  text: string;
-  req: string;
-  date: string;
+  items: Item[];
 }
-const Accordian: React.FC<Props> = ({ text, req, date }) => {
+
+const Accordian: React.FC<Props> = ({ items }) => {
   return (
     <div>
       <Collapse
         bordered={false}
-        className="font-semibold border-none shadow-none rounded-none "
+        className="font-semibold border-none shadow-none rounded-none"
         expandIcon={({ isActive }) => (
           <DownIcon rotate={isActive ? 360 : 270} />
         )}
-        items={[
-          {
-            key: "1",
-            label: `${date}`,
-            children: (
-              <div className=" flex pt-2 cursor-pointer">
+        items={items.map((item) => ({
+          key: item.id,
+          label: `${item.time.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}`,
+          children: (
+            <>
+              <div className="pt-2 flex cursor-pointer">
                 <div className="px-8">
-                  <p className="font-bold">{req}</p>
+                  <p className="font-bold">{item.method}</p>
                 </div>
                 <div>
-                  <p>{text}</p>
+                  <p>{item.endPoint}</p>
                 </div>
               </div>
-            ),
-          },
-        ]}
+            </>
+          ),
+        }))}
       />
     </div>
   );

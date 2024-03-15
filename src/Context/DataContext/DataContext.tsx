@@ -1,16 +1,18 @@
 import { createContext, useState } from "react";
-import { DataContextValue, RequestData, Workspace } from "../Types";
+import { DataContextValue } from "../Types";
 import { useWorkspaceContext } from "../WorkspaceContext/useWorkspaceContext";
+import { workspaceHelpers } from "../../Entities";
 
 export const DataContext = createContext<DataContextValue>(
   {} as DataContextValue
 );
 
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {
-  const { setWorkspaces, workspaces } = useWorkspaceContext();
+  const { setWorkspaces, workspaces, updateWorkspaceTimeStamp } =
+    useWorkspaceContext();
 
   const [activeReq, setActiveReq] = useState(0);
-
+  const [userSelectedActiveReq, setUserSelectedReq] = useState<string[]>([]);
   // **************** Method to update workspace data with parameters (only using for params and header sets) ******************
 
   const updateWorkspaceDataWithParams = (
@@ -22,10 +24,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     setWorkspaces((prevWorkspaces) => {
       return prevWorkspaces.map((workspace) => {
         if (workspace.id === workspaceId) {
-          const updatedReqData: RequestData[] = [...workspace.reqData];
+          const updatedReqData: workspaceHelpers.RequestData[] = [
+            ...workspace.reqData,
+          ];
           updatedReqData[reqIndex][key] = params;
           return { ...workspace, reqData: updatedReqData };
         }
+        updateWorkspaceTimeStamp(workspaceId);
         return workspace;
       });
     });
@@ -42,6 +47,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       ].reqParams || []),
       newParams,
     ]);
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   // ********************* Handles addition of param header sets *********************
@@ -55,29 +61,23 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       ].reqHeader || []),
       newHeader,
     ]);
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   // ********************* Method to add new request into a specific workspace *********************
 
-  const addRequest = (workspaceId: string) => {
+  const addRequest = (workspaceId: string, reqId: string) => {
     const workspaceIndex = workspaces.findIndex(
       (workspace) => workspace.id === workspaceId
     );
 
     if (workspaceIndex !== -1) {
-      const newRequest = {
-        method: "get",
-        endPoint: "/api/data/new",
-        reqHeader: [{ key: "content-type", value: "application/json" }],
-        reqBody: "",
-        reqParams: [{ key: "", value: "" }],
-        response: "",
-      };
-
       const updatedWorkspaces = [...workspaces];
-      updatedWorkspaces[workspaceIndex].reqData.push(newRequest);
-
+      updatedWorkspaces[workspaceIndex].reqData.push(
+        workspaceHelpers.getInitRequestObject(reqId)
+      );
       setWorkspaces(updatedWorkspaces);
+      updateWorkspaceTimeStamp(workspaceId);
     } else {
       console.log("Workspace not found");
     }
@@ -89,15 +89,19 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     setWorkspaces((prevWorkspaces) => {
       return prevWorkspaces.map((workspace) => {
         if (workspace.id === workspaceId) {
-          if (workspace.reqData.length === 1) {
-            return workspace;
-          }
           const newReqData = [...workspace.reqData];
           newReqData.splice(indexToRemove, 1);
           return { ...workspace, reqData: newReqData };
         }
         return workspace;
       });
+    });
+    updateWorkspaceTimeStamp(workspaceId);
+  };
+
+  const removeReqFromActiveReqArray = (indexToRemove: number) => {
+    setUserSelectedReq((prev) => {
+      return prev.filter((_, index) => index !== indexToRemove);
     });
   };
 
@@ -126,6 +130,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       "reqHeader",
       updatedReqHeader
     );
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   // ********************* Method to handle removal of param *********************
@@ -153,6 +158,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       "reqParams",
       updatedReqParams
     );
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   // *********************  Method to handle change in params input set *********************
@@ -161,13 +167,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     workspaceId: string,
     reqIndex: number,
     paramIndex: number,
-    key: keyof RequestData["reqParams"][number],
+    key: keyof workspaceHelpers.RequestData["reqParams"][number],
     value: string
   ): void => {
     setWorkspaces((prevWorkspaces) => {
       return prevWorkspaces.map((workspace) => {
         if (workspace.id === workspaceId) {
-          const updatedWorkspace: Workspace = { ...workspace };
+          const updatedWorkspace: workspaceHelpers.Workspace = { ...workspace };
           if (
             updatedWorkspace.reqData[reqIndex] &&
             updatedWorkspace.reqData[reqIndex].reqParams[paramIndex]
@@ -180,6 +186,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         return workspace;
       });
     });
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   // ********************* Method to handle change in headers input set *********************
@@ -188,13 +195,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     workspaceId: string,
     reqIndex: number,
     headerIndex: number,
-    key: keyof RequestData["reqHeader"][number],
+    key: keyof workspaceHelpers.RequestData["reqHeader"][number],
     value: string
   ): void => {
     setWorkspaces((prevWorkspaces) => {
       return prevWorkspaces.map((workspace) => {
         if (workspace.id === workspaceId) {
-          const updatedWorkspace: Workspace = { ...workspace };
+          const updatedWorkspace: workspaceHelpers.Workspace = { ...workspace };
           if (
             updatedWorkspace.reqData[reqIndex] &&
             updatedWorkspace.reqData[reqIndex].reqHeader[headerIndex]
@@ -207,12 +214,14 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         return workspace;
       });
     });
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   return (
     <DataContext.Provider
       value={{
         activeReq,
+        userSelectedActiveReq,
         setActiveReq,
         updateWorkspaceDataWithParams,
         handleAddInputSet,
@@ -223,6 +232,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         handleInputSetChange,
         handleRemoveHeader,
         handleRemoveInputSet,
+        setUserSelectedReq,
+        removeReqFromActiveReqArray,
       }}
     >
       {children}

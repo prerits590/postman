@@ -6,14 +6,15 @@ import {
   PeopleIcon,
   ThreeLinsStackIcon,
 } from "../Icons/Icons";
-import TabsSidebar from "../Tabs/TabsSidebar/TabsSidebar";
-import BtnPrimary from "../Buttons/BtnPrimary/BtnPrimary";
+import ReqTabSidebar from "../Tabs/ReqTabSidebar/ReqTabSidebar";
+import Btn from "../Buttons/Btn/Btn";
 import PopConfirm from "../PopConfirm/PopConfirm";
-import { Workspace } from "../../../Context/Types";
+// import { Workspace } from "../../../Context/Types";
+import { workspaceHelpers } from "../../../Entities";
 
 interface Props {
   isDark: boolean;
-  activeWorkspace: Workspace;
+  activeWorkspace: workspaceHelpers.Workspace;
 }
 
 const DrawerLeft: React.FC<Props> = ({ isDark, activeWorkspace }) => {
@@ -46,7 +47,7 @@ const DrawerLeft: React.FC<Props> = ({ isDark, activeWorkspace }) => {
         {" "}
         <div className="flex border border-black items-center">
           <div className="w-full pb-2 flex justify-center">
-            <BtnPrimary
+            <Btn
               typeOf={"primary"}
               text={"Invite"}
               icon={<PeopleIcon className="text-lg" />}
@@ -68,7 +69,7 @@ const DrawerLeft: React.FC<Props> = ({ isDark, activeWorkspace }) => {
             />
           </div>
         </div>
-        <TabsSidebar />
+        <ReqTabSidebar />
       </Drawer>
     </>
   );

@@ -10,6 +10,8 @@ function App() {
   const { setIsLoading } = useUiContext();
   const { setWorkspaces } = useWorkspaceContext();
 
+  //! to inner pages...
+
   useEffect(() => {
     setIsLoading(true);
     const mockWorkspaces = fetchWorkspaceData();

@@ -1,24 +1,24 @@
 import { Select } from "antd";
 import Search from "antd/es/input/Search";
 import { apiRequest } from "../../../Methods";
-import { RequestData } from "../../../../Context/Types";
+import { workspaceHelpers } from "../../../../Entities";
 
 interface Props {
   option1: string;
   option2: string;
-  selectedRequest: RequestData | null;
+  selectedRequest: workspaceHelpers.RequestData | null;
   selectedRequestIndex: number;
   activeWorkspaceId: string;
   updateRequest: (
     workspaceId: string,
     reqDataIndex: number,
-    key: keyof RequestData,
+    key: "title" | "method" | "endPoint" | "reqBody" | "response",
     value: any
   ) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SearchbarPrimary: React.FC<Props> = ({
+const RequestInputBar: React.FC<Props> = ({
   option1,
   option2,
   selectedRequest,
@@ -61,14 +61,16 @@ const SearchbarPrimary: React.FC<Props> = ({
         reqHeader
       );
       setIsLoading(false);
-      const jsonResponse = JSON.stringify(response, null, 6);
+      // const jsonResponse = JSON.stringify(response, null, 6);
+      // console.log(response);
       updateRequest(
         activeWorkspaceId,
         selectedRequestIndex,
         "response",
-        jsonResponse
+        response
       );
     }
+    console.log(selectedRequest);
   };
 
   return (
@@ -94,4 +96,4 @@ const SearchbarPrimary: React.FC<Props> = ({
   );
 };
 
-export default SearchbarPrimary;
+export default RequestInputBar;

@@ -1,15 +1,16 @@
 import { Input, Tabs } from "antd";
 import { useState } from "react";
 import { CrossIcon, PlusIcon } from "../../Icons/Icons";
-import TextareaSecondary from "../../TextInput/TextareaSecondary/TextareaSecondary";
-import { InputSet, RequestData } from "../../../../Context/Types";
+import TextAreaWrapper from "../../TextInput/TextArea/TextArea";
+import { InputSet } from "../../../../Context/Types";
 import Item from "antd/es/list/Item";
-import BtnPrimary from "../../Buttons/BtnPrimary/BtnPrimary";
+import Btn from "../../Buttons/Btn/Btn";
 import { useWorkspaceContext } from "../../../../Context/WorkspaceContext/useWorkspaceContext";
 import { useDataContext } from "../../../../Context/DataContext/useDataContext";
+import { workspaceHelpers } from "../../../../Entities";
 
 interface Props {
-  selectedRequest: RequestData | null;
+  selectedRequest: workspaceHelpers.RequestData | null;
   selectedRequestIndex: number;
   workspaceId: string;
 }
@@ -52,11 +53,9 @@ const TabsWorkspace: React.FC<Props> = ({
           {reqParams.map((inputSet: InputSet, index: number) => (
             <div key={index} className=" w-full py-2 flex">
               <div className="flex items-center justify-center">
-                <BtnPrimary
+                <Btn
                   icon={<PlusIcon />}
-                  onClickFunction={() =>
-                    handleParamAction(selectedRequestIndex)
-                  }
+                  onClick={() => handleParamAction(selectedRequestIndex)}
                   typeOf={"success"}
                 />
               </div>
@@ -94,12 +93,14 @@ const TabsWorkspace: React.FC<Props> = ({
                   </div>
                 </div>
                 <div className=" flex ">
-                  <BtnPrimary
+                  <Btn
                     icon={<CrossIcon />}
-                    onClickFunction={() =>
+                    onClick={() =>
                       handleParamAction(index, selectedRequestIndex)
                     }
-                    typeOf={"danger"}
+                    typeOf={""}
+                    danger={true}
+                    disabled={reqParams.length === 1 ? true : false}
                   />
                 </div>
               </div>
@@ -112,7 +113,7 @@ const TabsWorkspace: React.FC<Props> = ({
   const renderBody = () => {
     return (
       <div className=" py-2 w-full">
-        <TextareaSecondary
+        <TextAreaWrapper
           workspaceId={workspaceId}
           updateRequest={updateWorkspaceData}
           reqIndex={selectedRequestIndex}
@@ -131,11 +132,9 @@ const TabsWorkspace: React.FC<Props> = ({
           {reqHeader.map((headerSet: InputSet, index: number) => (
             <div key={index} className=" w-full py-2 flex">
               <div className="flex items-center justify-center">
-                <BtnPrimary
+                <Btn
                   icon={<PlusIcon />}
-                  onClickFunction={() =>
-                    handleHeaderAction(selectedRequestIndex)
-                  }
+                  onClick={() => handleHeaderAction(selectedRequestIndex)}
                   typeOf={"success"}
                 />
               </div>
@@ -173,12 +172,14 @@ const TabsWorkspace: React.FC<Props> = ({
                   </div>
                 </div>
                 <div className=" flex ">
-                  <BtnPrimary
+                  <Btn
                     icon={<CrossIcon />}
-                    onClickFunction={() =>
+                    onClick={() =>
                       handleHeaderAction(index, selectedRequestIndex)
                     }
-                    typeOf={"danger"}
+                    typeOf={""}
+                    danger={true}
+                    disabled={reqHeader.length === 1 ? true : false}
                   />
                 </div>
               </div>
@@ -193,7 +194,7 @@ const TabsWorkspace: React.FC<Props> = ({
   };
 
   return (
-    <div className="w-full ">
+    <div className="w-full border border-gray-500 rounded-2xl px-2 my-2">
       <Tabs
         defaultActiveKey="1"
         activeKey={activeTab}

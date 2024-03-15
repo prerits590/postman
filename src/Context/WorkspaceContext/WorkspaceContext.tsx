@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { RequestData, Workspace, WorkspaceContextValue } from "../Types";
+import { WorkspaceContextValue } from "../Types";
+import { workspaceHelpers } from "../../Entities";
 
 export const WorkspaceContext = createContext<WorkspaceContextValue>(
   {} as WorkspaceContextValue
@@ -12,50 +12,39 @@ export const WorkspaceProvider = ({
   children: React.ReactNode;
 }) => {
   //? ******************** Stores all the workspaces from api call DB *********************
-
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([
-    {
-      id: uuidv4(),
-      name: "Untitled Workspace",
-      selectedreq: 0,
-      reqData: [
-        {
-          method: "get",
-          endPoint: "",
-          reqHeader: [{ key: "content-type", value: "application/json" }],
-          reqBody: "",
-          reqParams: [{ key: "", value: "" }],
-          response: "",
-        },
-      ],
-    },
+  const [workspaces, setWorkspaces] = useState<workspaceHelpers.Workspace[]>([
+    workspaceHelpers.getInitWorkspaceObject(),
   ]);
+  // console.log(workspaces);
 
   //? ******************** Stores the currently active workspace *********************
-
-  const [activeWorkspace, setActiveWorkspace] = useState({
-    id: "",
-    name: "Untitled Workspace",
-    selectedreq: 0,
-    reqData: [
-      {
-        method: "get",
-        endPoint: "",
-        reqHeader: [{ key: "content-type", value: "application/json" }],
-        reqBody: "",
-        reqParams: [{ key: "", value: "" }],
-        response: "",
-      },
-    ],
-  });
+  const [activeWorkspace, setActiveWorkspace] = useState(
+    workspaceHelpers.getInitWorkspaceObject()
+  );
 
   // ********************* Method to update workspace name *********************
 
-  const updateWorkspaceName = (workspaceId: string, newName: string) => {
+  // const updateWorkspaceName = (workspaceId: string, newName: string) => {
+  //   setWorkspaces((prevWorkspaces) => {
+  //     return prevWorkspaces.map((workspace) => {
+  //       if (workspace.id === workspaceId) {
+  //         return { ...workspace, name: newName };
+  //       }
+  //       return workspace;
+  //     });
+  //   });
+  // };
+
+  const updateWorkspaceMetaData = (
+    workspaceId: string,
+    key: keyof workspaceHelpers.Workspace,
+    value: string
+  ) => {
+    const currentDate = new Date();
     setWorkspaces((prevWorkspaces) => {
       return prevWorkspaces.map((workspace) => {
         if (workspace.id === workspaceId) {
-          return { ...workspace, name: newName };
+          return { ...workspace, [key]: value, time: currentDate };
         }
         return workspace;
       });
@@ -74,6 +63,7 @@ export const WorkspaceProvider = ({
       });
     });
   };
+
   //********************* Method to dalete workspace *********************
 
   const deleteWorkspace = (workspaceId: string) => {
@@ -87,15 +77,16 @@ export const WorkspaceProvider = ({
   const updateWorkspaceData = (
     workspaceId: string,
     reqDataIndex: number,
-    key: keyof RequestData,
-    value: string & { key: string; value: string }[]
+    key: "title" | "method" | "endPoint" | "reqBody" | "response",
+    value: any
   ) => {
+    const currentDate = new Date();
     setWorkspaces((prevWorkspaces) => {
       return prevWorkspaces.map((workspace) => {
         if (workspace.id === workspaceId) {
           const updatedReqData = [...workspace.reqData];
           updatedReqData[reqDataIndex][key] = value;
-          return { ...workspace, reqData: updatedReqData };
+          return { ...workspace, reqData: updatedReqData, time: currentDate };
         }
         return workspace;
       });
@@ -105,22 +96,19 @@ export const WorkspaceProvider = ({
   //********************* Method to add a new workspace *********************
 
   const addWorkspace = () => {
-    const newWorkspace: Workspace = {
-      id: uuidv4(),
-      name: "Untitled Workspace",
-      selectedreq: 0,
-      reqData: [
-        {
-          method: "get",
-          endPoint: "/api/data",
-          reqHeader: [{ key: "content-type", value: "application/json" }],
-          reqBody: "",
-          reqParams: [{ key: "", value: "" }],
-          response: "",
-        },
-      ],
-    };
-    setWorkspaces([...workspaces, newWorkspace]);
+    setWorkspaces([...workspaces, workspaceHelpers.getInitWorkspaceObject()]);
+  };
+
+  const updateWorkspaceTimeStamp = (workspaceId: string) => {
+    const currentDate = new Date();
+    setWorkspaces((prevWorkspaces) => {
+      return prevWorkspaces.map((workspace) => {
+        if (workspace.id === workspaceId) {
+          return { ...workspace, time: currentDate };
+        }
+        return workspace;
+      });
+    });
   };
 
   return (
@@ -130,11 +118,12 @@ export const WorkspaceProvider = ({
         activeWorkspace,
         deleteWorkspace,
         addWorkspace,
-        updateWorkspaceName,
         updateWorkspaceData,
         setWorkspaces,
         setActiveWorkspace,
         updateActiveReq,
+        updateWorkspaceMetaData,
+        updateWorkspaceTimeStamp,
       }}
     >
       {children}

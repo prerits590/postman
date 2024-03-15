@@ -79,7 +79,8 @@ export const apiRequest = async (
       default:
         throw new Error("Invalid method");
     }
-    return response.data;
+    console.log(response, "----->>>>>>");
+    return response;
   } catch (error: unknown) {
     return {
       error,

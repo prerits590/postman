@@ -52,17 +52,24 @@
 
 .btn-req-active .bg-ant {
   position: relative;
-  background-color: #1574fa;
+  /* background-color: #3883ec; */
 }
 
-.bg-dark {
-  /* background-color: #001529 !important;
-  color: whitesmoke !important;
-
-  .ant-layout-sider-trigger {
-    background-color: #002140 !important;
-  } */
+.btn-req-active {
+  position: relative;
 }
+
+.btn-req-active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #080808;
+}
+
+
 
 .ant-layout-sider-trigger {
   background-color: var(--bg-ant) !important;
@@ -105,13 +112,13 @@
   color: white !important;
 }
 
-.ant-collapse-content-box:hover {
+/* .ant-collapse-content-box:hover {
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.18);
-}
+} */
 
 .ant-collapse-content-box {
   padding: 0.8rem !important;
@@ -127,4 +134,86 @@
   -webkit-backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.18);
 
+}
+
+.list-hover:hover {
+  background-color: #edf1f4;
+}
+
+.list-style .workspace-list {
+  list-style: none;
+
+}
+
+.list-style .workspace-card {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.list-style .workspace-card:hover {
+  background-color: #2580ff;
+  transform: scale(1.01);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color: #fff;
+}
+
+.list-style .workspace-card h3 {
+  margin: 0;
+  /* font-size: 1.2rem; */
+  font-weight: bold;
+}
+
+.list-style .workspace-card p {
+  /* margin-top: 0.5rem; */
+  font-size: 0.9rem;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+}
+
+.list-style .workspace-card:hover p {
+  color: #fff;
+}
+
+.card-style .workspace-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-style .workspace-card {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease-in-out;
+}
+
+.card-style .workspace-card:hover {
+  background-color: #2580ff;
+  transform: scale(1.01);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color: #fff;
+
+}
+
+.card-style .workspace-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card-style .workspace-card p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+}
+
+.card-style .workspace-card:hover p {
+  color: #fff;
 }

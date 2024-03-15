@@ -1,23 +1,24 @@
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
-import { RequestData } from "../../../../Context/Types";
+// import { RequestData } from "../../../../Context/Types";
 import { isValidJSON } from "../../../Methods";
 import BadgeComponent from "../../Badge/Badge";
+import { workspaceHelpers } from "../../../../Entities";
 
 interface Props {
   placeholderText: string;
   reqIndex: number;
-  selectedRequest: RequestData | null;
+  selectedRequest: workspaceHelpers.RequestData | null;
   updateRequest: (
     workspaceId: string,
     reqDataIndex: number,
-    key: keyof RequestData,
-    value: any
+    key: "title" | "method" | "endPoint" | "reqBody" | "response",
+    value: string
   ) => void;
   workspaceId: string;
 }
 
-const TextareaSecondary: React.FC<Props> = ({
+const TextAreaWrapper: React.FC<Props> = ({
   placeholderText,
   reqIndex,
   selectedRequest,
@@ -63,4 +64,4 @@ const TextareaSecondary: React.FC<Props> = ({
   );
 };
 
-export default TextareaSecondary;
+export default TextAreaWrapper;

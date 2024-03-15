@@ -5,18 +5,24 @@ interface Props {
   text?: string;
   icon?: ReactNode;
   typeOf?: string;
-  onClickFunction?: () => void;
+  onClick?: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  danger?: boolean;
 }
 
-const BtnPrimary: React.FC<Props> = ({
+const Btn: React.FC<Props> = ({
   text,
   icon,
   typeOf,
-  onClickFunction,
+  active,
+  disabled,
+  danger,
+  onClick,
 }) => {
   const handleClick = () => {
     {
-      onClickFunction && onClickFunction();
+      onClick && onClick();
     }
   };
   let buttonClassName = "flex items-center justify-center shadow-none";
@@ -26,13 +32,18 @@ const BtnPrimary: React.FC<Props> = ({
   } else if (typeOf === "danger") {
     buttonClassName += " btn-danger";
   }
+
   return (
     <div>
       <Button
-        className={buttonClassName}
+        className={`${buttonClassName} ${
+          active === false ? "border-2 border-white" : ""
+        }`}
         type={typeOf ? `${typeOf}` : undefined}
         icon={icon}
-        onClick={onClickFunction ? handleClick : undefined}
+        onClick={onClick ? handleClick : undefined}
+        disabled={disabled ? true : false}
+        danger={danger ? true : false}
       >
         {text}
       </Button>
@@ -40,4 +51,4 @@ const BtnPrimary: React.FC<Props> = ({
   );
 };
 
-export default BtnPrimary;
+export default Btn;

@@ -1,117 +1,130 @@
 import { useEffect, useState } from "react";
 import {
+  CommentIcon,
   CrossIcon,
-  DeleteIcon,
-  PeopleIcon,
+  PenIcon,
   PlusIcon,
-  SettingsIcon,
+  SaveIcon,
   ThreeDotsIcon,
 } from "../Common/Icons/Icons";
-import SearchbarPrimary from "../Common/TextInput/SearchBarPrimary/SearchBarPrimary";
-import BtnReq from "../Common/Buttons/BtnReq/BtnReq";
-import TabsWorkspace from "../Common/Tabs/TabsWorkspace/TabWorkspace";
-import TextareaPrimary from "../Common/TextInput/TextareaPrimary/TextareaPrimary";
-import EmptyComponent from "../EmptyComponent/EmptyComponent";
-import BtnPrimary from "../Common/Buttons/BtnPrimary/BtnPrimary";
-// import ThemeToggle from "../ThemeToggle/ThemeToggle";
-import WorkspaceNavSm from "../WorkspaceNavSm/WorkspaceNavSm";
-import { RequestData } from "../../Context/Types";
 import { useWorkspaceContext } from "../../Context/WorkspaceContext/useWorkspaceContext";
 import { useDataContext } from "../../Context/DataContext/useDataContext";
 import { useUiContext } from "../../Context/UiContext/useUiContext";
-import PopConfirm from "../Common/PopConfirm/PopConfirm";
-import { message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { workspaceHelpers } from "../../Entities";
+import RequestInputBar from "../Common/TextInput/RequestInputBar/RequestInputBar";
+import TabsWorkspace from "../Common/Tabs/TabsWorkspace/TabWorkspace";
+import EmptyComponent from "../EmptyComponent/EmptyComponent";
+import Btn from "../Common/Buttons/Btn/Btn";
+import WorkspaceNavSm from "../WorkspaceNavSm/WorkspaceNavSm";
+import ModalComponent from "../Common/Modal/ModalComponent";
+import RequestAction from "../RequestAction/RequestAction";
+import TabsResponse from "../Common/Tabs/TabsResponse/TabsResponse";
 
 interface Props {}
 
 const WorkspaceSection: React.FC<Props> = () => {
-  const navigate = useNavigate();
   const { activeWorkspace, updateWorkspaceData } = useWorkspaceContext();
-  const { addRequest, removeRequestAtIndex, activeReq, setActiveReq } =
-    useDataContext();
-  const { updateActiveReq, deleteWorkspace } = useWorkspaceContext();
+  const {
+    activeReq,
+    userSelectedActiveReq,
+    addRequest,
+    setActiveReq,
+    removeReqFromActiveReqArray,
+    setUserSelectedReq,
+  } = useDataContext();
+  const { updateActiveReq } = useWorkspaceContext();
   const { setIsLoading, isLoading } = useUiContext();
   const [selectedRequestIndex, setSelectedRequestIndex] = useState(activeReq);
   const [selectedRequest, setSelectedRequest] = useState(
-    activeWorkspace.reqData[activeReq]
+    activeWorkspace.reqData.find(
+      (req) => req.id === userSelectedActiveReq[0]
+    ) || null
   );
-  const [response, setResponse] = useState("");
-  const handleRequestClick = (req: RequestData, index: number) => {
+  // console.log(activeWorkspace, "ACTIVE WORKSPACE");
+  const [response, setResponse] = useState({});
+  const handleRequestClick = (
+    req: workspaceHelpers.RequestData,
+    index: number
+  ) => {
     setSelectedRequest(req);
     setSelectedRequestIndex(index);
     setActiveReq(index);
     updateActiveReq(activeWorkspace.id, index);
   };
 
-  useEffect(() => {
-    setSelectedRequestIndex(activeWorkspace.selectedreq);
-    setSelectedRequest(activeWorkspace.reqData[activeWorkspace.selectedreq]);
-    setActiveReq(activeWorkspace.selectedreq);
-  }, [activeWorkspace.id]);
+  const filteredRequests = activeWorkspace.reqData.filter((req) =>
+    userSelectedActiveReq.includes(req.id)
+  );
 
   useEffect(() => {
     if (selectedRequest) {
-      setResponse(selectedRequest.response || "");
+      setResponse(selectedRequest.response || {});
     } else {
-      setResponse("");
+      setResponse({});
     }
   }, [selectedRequest?.response, selectedRequest]);
 
-  const confirm = (activeWorkspaceId: string) => {
-    deleteWorkspace(activeWorkspaceId);
-    message.success("Workspace Deleted Successfully.");
-    navigate("/");
+  useEffect(() => {
+    // console.log("RAN--------->>>>>>>>>>>>>");
+    const newSelectedRequest = activeWorkspace.reqData[selectedRequestIndex];
+    if (
+      newSelectedRequest &&
+      userSelectedActiveReq.includes(newSelectedRequest.id)
+    ) {
+      // console.log(newSelectedRequest, "NEW SELECTED REQ");
+      setSelectedRequest(newSelectedRequest);
+      setActiveReq(selectedRequestIndex);
+      updateActiveReq(activeWorkspace.id, selectedRequestIndex);
+    } else {
+      const selectedIndexInFiltered = filteredRequests.findIndex(
+        (req) => newSelectedRequest && req.id === newSelectedRequest.id
+      );
+
+      if (selectedIndexInFiltered !== -1) {
+        setSelectedRequest(filteredRequests[selectedIndexInFiltered]);
+        setSelectedRequestIndex(selectedIndexInFiltered);
+      } else {
+        if (filteredRequests.length > 0) {
+          const newSelectedRequest = filteredRequests[0];
+          setSelectedRequest(newSelectedRequest);
+          setSelectedRequestIndex(0);
+          setActiveReq(0);
+          updateActiveReq(activeWorkspace.id, 0);
+        } else {
+          setSelectedRequest(null);
+          setSelectedRequestIndex(-1);
+        }
+      }
+    }
+    // console.log(selectedRequest, selectedRequestIndex);
+  }, [userSelectedActiveReq]);
+
+  const handleAddRequest = () => {
+    const requestId = uuidv4();
+    addRequest(activeWorkspace.id, requestId);
+    setUserSelectedReq((prev) => [...prev, requestId]);
   };
 
+  const handleRemoveRequest = (reqId: string) => {
+    const index = userSelectedActiveReq.findIndex((req) => req === reqId);
+    if (index !== -1) {
+      removeReqFromActiveReqArray(index);
+    }
+  };
+  // console.log(selectedRequest, selectedRequestIndex);
+  console.log(response, "RESPONSE--->>>>>");
   return (
     <div className=" flex flex-col px-4 h-full">
-      <div className="sm:block hidden">
-        <div className="flex items-center justify-between py-4">
-          <div className="flex">
-            <div className="border">
-              <BtnPrimary
-                text=""
-                typeOf={"primary"}
-                icon={<SettingsIcon className="text-xl" />}
-              />
-            </div>
-            {/* <div className="border">
-              <PopConfirm btnText={<DeleteIcon />} />
-            </div> */}
-          </div>
-          <div className="">
-            {/* <ThemeToggle setIsDark={setIsDark} /> */}
-            <PopConfirm
-              btnText={<DeleteIcon />}
-              description={
-                "Are you sure that you want to delete this workspace?"
-              }
-              okText={"Delete"}
-              cancelText={"Cancel"}
-              confirm={() => {
-                confirm(activeWorkspace.id);
-              }}
-              title={"Delete Workspace"}
-            />
-          </div>
-        </div>
-        <div className="w-full py-1 justify-center sm:flex hidden">
-          <BtnPrimary
-            typeOf={"primary"}
-            text={"Invite"}
-            icon={<PeopleIcon className="text-lg" />}
-          />
-        </div>
-      </div>
+      <div className="sm:block hidden"></div>
       <div className=" sm:hidden block">
         <WorkspaceNavSm activeWorkspace={activeWorkspace} />
       </div>
       <div className=" flex overflow-x-auto">
-        {activeWorkspace.reqData.map((req, index) => (
+        {filteredRequests.map((req, index) => (
           <div
             key={index}
-            className={`pr-1 pt-2 btn-req ${
+            className={`mr-1 pt-1 btn-req ${
               selectedRequestIndex === index ? "btn-req-active" : ""
             }`}
           >
@@ -120,38 +133,66 @@ const WorkspaceSection: React.FC<Props> = () => {
                 handleRequestClick(req, index);
               }}
             >
-              <BtnReq
-                onClickFunction={() =>
-                  removeRequestAtIndex(index, activeWorkspace.id)
-                }
+              <RequestAction
+                onClick={() => handleRemoveRequest(req.id)}
                 text={req.endPoint ? req.endPoint : "http://google.com"}
                 req={req.method ? req.method.toUpperCase() : "GET"}
                 icon={<CrossIcon className="text-gray-300" />}
+                indexToRemove={index}
               />
             </div>
           </div>
         ))}
 
-        <div className="a  flex items-end">
-          <div className="px-1">
-            <BtnPrimary
-              onClickFunction={() => addRequest(activeWorkspace.id)}
+        <div className="a pb-2 flex items-end">
+          <div className="pr-1">
+            <Btn
+              onClick={handleAddRequest}
               typeOf={"primary"}
               icon={<PlusIcon />}
             />
           </div>
           <div className=" flex items-center ">
-            <BtnPrimary text={""} icon={<ThreeDotsIcon />} />
+            <Btn icon={<ThreeDotsIcon />} />
           </div>
         </div>
       </div>
+
       <div className=" ">
-        <div className="py-4 font-normal">
-          <p>Untitled Request</p>
+        <div className="py-2 font-normal flex items-center justify-between">
+          <div>
+            <p>{selectedRequest?.title}</p>
+          </div>
+          <div className=" flex">
+            <div>
+              <Btn text={"Save"} icon={<SaveIcon />} />
+            </div>
+            <div>
+              <ModalComponent
+                disabled={userSelectedActiveReq.length === 0 ? true : false}
+                btnType=""
+                title="Change Request Name"
+                initialValue={""}
+                onUpdate={(newName) =>
+                  updateWorkspaceData(
+                    activeWorkspace.id,
+                    selectedRequestIndex,
+                    "title",
+                    newName
+                  )
+                }
+                icon={<PenIcon />}
+                placeholder="My Request"
+              />
+            </div>
+            <div>
+              <Btn icon={<CommentIcon />} />
+            </div>
+          </div>
         </div>
         <div className="a">
           <div className="w-full">
-            <SearchbarPrimary
+            <RequestInputBar
               updateRequest={updateWorkspaceData}
               setIsLoading={setIsLoading}
               selectedRequest={selectedRequest}
@@ -171,13 +212,8 @@ const WorkspaceSection: React.FC<Props> = () => {
         />
       </div>
       <div className="flex-grow">
-        {response ? (
-          <TextareaPrimary
-            isLoading={isLoading}
-            data={response}
-            selectedRequest={selectedRequest}
-            selectedRequestIndex={selectedRequestIndex}
-          />
+        {Object.keys(response).length > 0 ? (
+          <TabsResponse data={response} isLoading={isLoading} />
         ) : (
           <EmptyComponent />
         )}

@@ -3,12 +3,12 @@ import DrawerLeft from "../Common/Drawer/Drawer";
 import { ArrowBackIcon, SettingsIcon } from "../Common/Icons/Icons";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
-import BtnPrimary from "../Common/Buttons/BtnPrimary/BtnPrimary";
+import Btn from "../Common/Buttons/Btn/Btn";
 import { useUiContext } from "../../Context/UiContext/useUiContext";
-import { Workspace } from "../../Context/Types";
+import { workspaceHelpers } from "../../Entities";
 
 interface WorkspaceNavSmProps {
-  activeWorkspace: Workspace;
+  activeWorkspace: workspaceHelpers.Workspace;
 }
 
 const WorkspaceNavSm: FC<WorkspaceNavSmProps> = ({ activeWorkspace }) => {
@@ -18,7 +18,7 @@ const WorkspaceNavSm: FC<WorkspaceNavSmProps> = ({ activeWorkspace }) => {
       <div className=" flex items-center pt-4 pb-2">
         <div className=" pr-2">
           <Link to="/">
-            <BtnPrimary typeOf={"primary"} text={""} icon={<ArrowBackIcon />} />
+            <Btn typeOf={"primary"} text={""} icon={<ArrowBackIcon />} />
           </Link>
         </div>
         <div className="block sm:hidden">
@@ -31,7 +31,7 @@ const WorkspaceNavSm: FC<WorkspaceNavSmProps> = ({ activeWorkspace }) => {
             <ThemeToggle setIsDark={setIsDark} />
           </div>
           <div className="">
-            <BtnPrimary
+            <Btn
               typeOf={"primary"}
               text={""}
               icon={<SettingsIcon className="text-xl" />}

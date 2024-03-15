@@ -1,11 +1,4 @@
-export interface RequestData {
-  method: string;
-  endPoint: string;
-  reqHeader: { key: string; value: string }[];
-  reqBody: string;
-  reqParams: { key: string; value: string }[];
-  response: string;
-}
+import { workspaceHelpers } from "../Entities";
 
 export interface InputSet {
   key: string;
@@ -21,20 +14,20 @@ export interface DataContextValue {
   ) => void;
   handleAddInputSet: (workspaceId: string, reqIndex: number) => void;
   handleAddHeader: (workspaceId: string, reqIndex: number) => void;
-  addRequest: (workspaceId: string) => void;
+  addRequest: (workspaceId: string, id: string) => void;
   removeRequestAtIndex: (indexToRemove: number, workspaceId: string) => void;
   handleInputSetChange: (
     workspaceId: string,
     reqIndex: number,
     paramIndex: number,
-    key: keyof RequestData["reqParams"][number],
+    key: keyof workspaceHelpers.RequestData["reqParams"][number],
     value: string
   ) => void;
   handleInputHeaderChange: (
     workspaceId: string,
     reqIndex: number,
     headerIndex: number,
-    key: keyof RequestData["reqHeader"][number],
+    key: keyof workspaceHelpers.RequestData["reqHeader"][number],
     value: string
   ) => void;
 
@@ -50,35 +43,41 @@ export interface DataContextValue {
   ) => void;
   activeReq: number;
   setActiveReq: React.Dispatch<React.SetStateAction<number>>;
+  userSelectedActiveReq: string[];
+  setUserSelectedReq: React.Dispatch<React.SetStateAction<string[]>>;
+  removeReqFromActiveReqArray: (indexToRemove: number) => void;
 }
 
 export interface UiDataContextValue {
   isLoading: boolean;
   isDark: boolean;
+  showTooltip: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowTooltip: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface WorkspaceContextValue {
-  workspaces: Workspace[];
-  setWorkspaces: React.Dispatch<React.SetStateAction<Workspace[]>>;
-  setActiveWorkspace: React.Dispatch<React.SetStateAction<Workspace>>;
+  workspaces: workspaceHelpers.Workspace[];
+  setWorkspaces: React.Dispatch<
+    React.SetStateAction<workspaceHelpers.Workspace[]>
+  >;
+  setActiveWorkspace: React.Dispatch<React.SetStateAction<any>>;
   addWorkspace: () => void;
-  activeWorkspace: Workspace;
-  updateWorkspaceName: (workspaceId: string, newName: string) => void;
+  activeWorkspace: workspaceHelpers.Workspace;
+  // updateWorkspaceName: (workspaceId: string, newName: string) => void;
   updateActiveReq: (workspaceId: string, newIndex: number) => void;
   updateWorkspaceData: (
     workspaceId: string,
     reqDataIndex: number,
-    key: keyof RequestData,
-    value: string & { key: string; value: string }[]
+    key: "title" | "method" | "endPoint" | "reqBody" | "response",
+    value: string
   ) => void;
   deleteWorkspace: (workspaceId: string) => void;
-}
-
-export interface Workspace {
-  name: string;
-  id: string;
-  selectedreq: number;
-  reqData: RequestData[];
+  updateWorkspaceMetaData: (
+    workspaceId: string,
+    key: keyof workspaceHelpers.Workspace,
+    value: string
+  ) => void;
+  updateWorkspaceTimeStamp: (workspaceId: string) => void;
 }
