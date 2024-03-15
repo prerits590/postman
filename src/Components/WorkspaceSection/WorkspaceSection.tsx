@@ -42,7 +42,7 @@ const WorkspaceSection: React.FC<Props> = () => {
     ) || null
   );
   // console.log(activeWorkspace, "ACTIVE WORKSPACE");
-  const [response, setResponse] = useState({});
+  const [response, setResponse] = useState<any>({});
   const handleRequestClick = (
     req: workspaceHelpers.RequestData,
     index: number
