@@ -45,16 +45,23 @@ export interface DataContextValue {
   setActiveReq: React.Dispatch<React.SetStateAction<number>>;
   userSelectedActiveReq: string[];
   setUserSelectedReq: React.Dispatch<React.SetStateAction<string[]>>;
-  removeReqFromActiveReqArray: (indexToRemove: number) => void;
+  removeReqFromActiveReqArray: (
+    workspaceId: string,
+    indexToRemove: number
+  ) => void;
 }
 
 export interface UiDataContextValue {
   isLoading: boolean;
   isDark: boolean;
   showTooltip: boolean;
+  viewMode: "tile" | "list";
+  sortType: "alphabatically" | "date";
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
   setShowTooltip: React.Dispatch<React.SetStateAction<boolean>>;
+  setViewMode: React.Dispatch<React.SetStateAction<"tile" | "list">>;
+  setSortType: React.Dispatch<React.SetStateAction<"alphabatically" | "date">>;
 }
 
 export interface WorkspaceContextValue {

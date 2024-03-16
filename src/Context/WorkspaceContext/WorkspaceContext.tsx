@@ -15,7 +15,6 @@ export const WorkspaceProvider = ({
   const [workspaces, setWorkspaces] = useState<workspaceHelpers.Workspace[]>([
     workspaceHelpers.getInitWorkspaceObject(),
   ]);
-  // console.log(workspaces);
 
   //? ******************** Stores the currently active workspace *********************
   const [activeWorkspace, setActiveWorkspace] = useState(

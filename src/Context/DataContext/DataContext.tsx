@@ -99,10 +99,14 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     updateWorkspaceTimeStamp(workspaceId);
   };
 
-  const removeReqFromActiveReqArray = (indexToRemove: number) => {
+  const removeReqFromActiveReqArray = (
+    workspaceId: string,
+    indexToRemove: number
+  ) => {
     setUserSelectedReq((prev) => {
       return prev.filter((_, index) => index !== indexToRemove);
     });
+    updateWorkspaceTimeStamp(workspaceId);
   };
 
   // ********************* Method to handle removal of header *********************

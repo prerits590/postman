@@ -2,9 +2,9 @@ import { Select } from "antd";
 import { FC } from "react";
 
 interface SelectWrapperProps {
-  defaultValue?: string;
+  defaultValue?: "date" | "alphabatically";
   options: { value: string; label: string }[];
-  onChange?: (value: string) => void;
+  onChange?: (value: "date" | "alphabatically") => void;
 }
 
 const SelectWrapper: FC<SelectWrapperProps> = ({

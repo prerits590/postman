@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { v4 as uuidv4 } from "uuid";
 const date = new Date();
 
@@ -10,8 +10,17 @@ export interface RequestData {
   reqHeader: { key: string; value: string }[];
   reqBody: string;
   reqParams: { key: string; value: string }[];
-  response: AxiosResponse<any> | null;
+  response: AxiosResponse<ApiReponse> | null;
   time: Date;
+}
+export interface ApiReponse {
+  data: any;
+  status: number;
+  statusText: string;
+  headers: any;
+  config: any;
+  request: any;
+  error?: AxiosError;
 }
 export interface Workspace {
   name: string;

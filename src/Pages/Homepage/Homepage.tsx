@@ -19,18 +19,17 @@ interface Props {}
 
 const Homepage: React.FC<Props> = () => {
   const { workspaces } = useWorkspaceContext();
-  const { showTooltip, setShowTooltip } = useUiContext();
-  // const { setIsLoading } = useUiContext();
+  const {
+    showTooltip,
+    setShowTooltip,
+    viewMode,
+    sortType,
+    setSortType,
+    setViewMode,
+  } = useUiContext();
   const [sortedWorkspaces, setSortedWorkspaces] = useState<
     workspaceHelpers.Workspace[]
   >([]);
-  const [viewMode, setViewMode] = useState<"tile" | "list">(() => {
-    return (localStorage.getItem("viewMode") as "tile" | "list") || "tile";
-  });
-  const [sortType, setSortType] = useState<string>(() => {
-    return localStorage.getItem("sortType") || "date";
-  });
-
   // useEffect(() => {
   //   setIsLoading(true);
   //   const mockWorkspaces = fetchWorkspaceData();
@@ -60,20 +59,12 @@ const Homepage: React.FC<Props> = () => {
     setSortedWorkspaces(workspacesSorted);
   }, [sortType, workspaces]);
 
-  useEffect(() => {
-    localStorage.setItem("viewMode", viewMode);
-  }, [viewMode]);
-  useEffect(() => {
-    localStorage.setItem("sortType", sortType);
-  }, [sortType]);
-
   const handleViewModeChange = (mode: "tile" | "list") => {
     setViewMode(mode);
   };
-  const handleSortTypeChange = (type: string) => {
+  const handleSortTypeChange = (type: "alphabatically" | "date") => {
     setSortType(type);
   };
-  // console.log(workspaces);
   return (
     <div className={`h-full sm:h-screen flex flex-col relative px-5`}>
       <div className="">

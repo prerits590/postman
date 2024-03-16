@@ -41,7 +41,11 @@
 .ant-searchbar .ant-select-arrow {
   color: whitesmoke;
   font-weight: 500;
+}
 
+.ant-searchbar1 .ant-select-selection-item,
+.ant-searchbar1 .ant-select-arrow {
+  font-weight: 500;
 }
 
 .ant-searchbar .ant-select-open .ant-select-selection-item {

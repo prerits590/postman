@@ -45,7 +45,27 @@ const TabsWorkspace: React.FC<Props> = ({
     }
   };
   const renderParams = () => {
-    if (!selectedRequest) return null;
+    if (!selectedRequest)
+      return (
+        <div className=" w-full py-4 flex">
+          <div className="flex py-2 items-center justify-center">
+            <Btn disabled={true} icon={<PlusIcon />} />
+          </div>
+          <div className="py-2 w-full flex ">
+            <div className="grid grid-cols-6 w-full px-1 items-center  h-full ">
+              <div className="col-span-3 px-1">
+                <Input placeholder="KEY" disabled />
+              </div>
+              <div className="col-span-3 px-1">
+                <Input placeholder="VALUE" disabled />
+              </div>
+            </div>
+            <div className=" flex ">
+              <Btn disabled={true} icon={<CrossIcon />} danger={true} />
+            </div>
+          </div>
+        </div>
+      );
     const { reqParams } = selectedRequest;
     return (
       <div className="sm:py-4 py-2">
@@ -114,6 +134,7 @@ const TabsWorkspace: React.FC<Props> = ({
     return (
       <div className=" py-2 w-full">
         <TextAreaWrapper
+          disabled={selectedRequest ? false : true}
           workspaceId={workspaceId}
           updateRequest={updateWorkspaceData}
           reqIndex={selectedRequestIndex}
@@ -124,7 +145,27 @@ const TabsWorkspace: React.FC<Props> = ({
     );
   };
   const renderHeader = () => {
-    if (!selectedRequest) return null;
+    if (!selectedRequest)
+      return (
+        <div className=" w-full py-4 flex">
+          <div className="flex py-2 items-center justify-center">
+            <Btn disabled={true} icon={<PlusIcon />} />
+          </div>
+          <div className="py-2 w-full flex ">
+            <div className="grid grid-cols-6 w-full px-1 items-center  h-full ">
+              <div className="col-span-3 px-1">
+                <Input placeholder="KEY" disabled />
+              </div>
+              <div className="col-span-3 px-1">
+                <Input placeholder="VALUE" disabled />
+              </div>
+            </div>
+            <div className=" flex ">
+              <Btn disabled={true} icon={<CrossIcon />} danger={true} />
+            </div>
+          </div>
+        </div>
+      );
     const { reqHeader } = selectedRequest;
     return (
       <div className="py-4">

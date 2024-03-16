@@ -4,12 +4,12 @@ import Accordian from "../../Accordian/Accordian";
 import DividerLight from "../../Divider/Divider";
 import Item from "antd/es/list/Item";
 import { useWorkspaceContext } from "../../../../Context/WorkspaceContext/useWorkspaceContext";
-import { DeleteIcon } from "../../Icons/Icons";
+import { DeleteIcon, SearchIcon } from "../../Icons/Icons";
 import PopConfirm from "../../PopConfirm/PopConfirm";
 import { useDataContext } from "../../../../Context/DataContext/useDataContext";
 import SwitchWrapper from "../../Switch/SwitchWrapper";
-import SearchBar from "../../TextInput/SearchBar/SearchBar";
 import Btn from "../../Buttons/Btn/Btn";
+import InputGeneric from "../../TextInput/Input/InputGeneric";
 
 const ReqTabSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("1");
@@ -18,8 +18,10 @@ const ReqTabSidebar: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const { removeRequestAtIndex, setUserSelectedReq, userSelectedActiveReq } =
     useDataContext();
-  // console.log(userSelectedActiveReq, "User selected active req");
+
   const confirm = (index: number) => {
+    const deletedRequestId = activeWorkspace.reqData[index].id;
+    setUserSelectedReq((prev) => prev.filter((id) => id !== deletedRequestId));
     removeRequestAtIndex(index, activeWorkspace.id);
     message.success("Request Deleted Successfully.");
   };
@@ -30,11 +32,11 @@ const ReqTabSidebar: React.FC = () => {
     }
 
     setUserSelectedReq((prev) => [...prev, reqId]);
+    message.success("Request is successfully added!");
   };
   useEffect(() => {
     setHistory(activeWorkspace.reqData);
   }, [activeWorkspace]);
-  // console.log(history, "HISTORY");
   const renderHistory = () => {
     return (
       <div className="">
@@ -53,11 +55,12 @@ const ReqTabSidebar: React.FC = () => {
                 setHistory([]);
               }}
               text="Clear All"
+              disabled={history.length === 0 ? true : false}
             />
           </div>
         </div>
         <DividerLight />
-        <div>
+        <div className="truncate">
           <Accordian items={history} />
         </div>
       </div>
@@ -77,7 +80,7 @@ const ReqTabSidebar: React.FC = () => {
                   onClick={() => {
                     handleAddRequest(req.id);
                   }}
-                  className="flex items-center w-full h-full py-5"
+                  className="flex items-center w-full h-full py-5 truncate"
                 >
                   <h3 className="pr-4 font-bold">{req.method.toUpperCase()}</h3>
                   <p>{req.endPoint}</p>
@@ -106,17 +109,19 @@ const ReqTabSidebar: React.FC = () => {
   };
 
   return (
-    <div className="m-0 w-full flex flex-col justify-center">
-      <div className="pl-2">
-        <SearchBar
+    <div className="m-0 w-full py-1 flex flex-col justify-center">
+      <div className="pl-2 w-full">
+        <InputGeneric
           placeholder="Search..."
           value={searchValue}
           onChange={(e) => {
             setSearchValue(e.target.value);
           }}
+          prefix={<SearchIcon />}
+          disabled={activeWorkspace.reqData.length === 0 ? true : false}
         />
         {searchValue && (
-          <div className="suggestions pt-2 px-6">
+          <div className="suggestions pt-2 px-6 w-full">
             {activeWorkspace.reqData
               .filter((req) =>
                 req.title.toLowerCase().includes(searchValue.toLowerCase())
@@ -126,7 +131,8 @@ const ReqTabSidebar: React.FC = () => {
                   key={req.id}
                   className="suggestion "
                   onClick={() => {
-                    console.log("hey search worked");
+                    handleAddRequest(req.id);
+                    setSearchValue("");
                   }}
                 >
                   <span className="cursor-pointer w-full">{req.title}</span>

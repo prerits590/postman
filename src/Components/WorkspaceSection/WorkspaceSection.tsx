@@ -20,6 +20,7 @@ import WorkspaceNavSm from "../WorkspaceNavSm/WorkspaceNavSm";
 import ModalComponent from "../Common/Modal/ModalComponent";
 import RequestAction from "../RequestAction/RequestAction";
 import TabsResponse from "../Common/Tabs/TabsResponse/TabsResponse";
+import DrawerLeft from "../Common/Drawer/Drawer";
 
 interface Props {}
 
@@ -41,7 +42,6 @@ const WorkspaceSection: React.FC<Props> = () => {
       (req) => req.id === userSelectedActiveReq[0]
     ) || null
   );
-  // console.log(activeWorkspace, "ACTIVE WORKSPACE");
   const [response, setResponse] = useState<any>({});
   const handleRequestClick = (
     req: workspaceHelpers.RequestData,
@@ -66,13 +66,11 @@ const WorkspaceSection: React.FC<Props> = () => {
   }, [selectedRequest?.response, selectedRequest]);
 
   useEffect(() => {
-    // console.log("RAN--------->>>>>>>>>>>>>");
     const newSelectedRequest = activeWorkspace.reqData[selectedRequestIndex];
     if (
       newSelectedRequest &&
       userSelectedActiveReq.includes(newSelectedRequest.id)
     ) {
-      // console.log(newSelectedRequest, "NEW SELECTED REQ");
       setSelectedRequest(newSelectedRequest);
       setActiveReq(selectedRequestIndex);
       updateActiveReq(activeWorkspace.id, selectedRequestIndex);
@@ -97,8 +95,7 @@ const WorkspaceSection: React.FC<Props> = () => {
         }
       }
     }
-    // console.log(selectedRequest, selectedRequestIndex);
-  }, [userSelectedActiveReq]);
+  }, [userSelectedActiveReq, activeWorkspace.reqData]);
 
   const handleAddRequest = () => {
     const requestId = uuidv4();
@@ -109,18 +106,17 @@ const WorkspaceSection: React.FC<Props> = () => {
   const handleRemoveRequest = (reqId: string) => {
     const index = userSelectedActiveReq.findIndex((req) => req === reqId);
     if (index !== -1) {
-      removeReqFromActiveReqArray(index);
+      removeReqFromActiveReqArray(activeWorkspace.id, index);
     }
   };
-  // console.log(selectedRequest, selectedRequestIndex);
-  console.log(response, "RESPONSE--->>>>>");
+
   return (
     <div className=" flex flex-col px-4 h-full">
       <div className="sm:block hidden"></div>
       <div className=" sm:hidden block">
         <WorkspaceNavSm activeWorkspace={activeWorkspace} />
       </div>
-      <div className=" flex overflow-x-auto">
+      <div className="py-1 flex overflow-x-auto">
         {filteredRequests.map((req, index) => (
           <div
             key={index}
@@ -153,19 +149,41 @@ const WorkspaceSection: React.FC<Props> = () => {
             />
           </div>
           <div className=" flex items-center ">
-            <Btn icon={<ThreeDotsIcon />} />
+            {/* <Btn
+              disabled={userSelectedActiveReq.length === 0 ? true : false}
+              icon={<ThreeDotsIcon />}
+            /> */}
+            <DrawerLeft
+              // activeWorkspace={activeWorkspace}
+              icon={<ThreeDotsIcon />}
+              component={
+                <Btn
+                  text="Clear all active requests"
+                  onClick={() => {
+                    setUserSelectedReq([]);
+                  }}
+                  icon={<CrossIcon />}
+                  disabled={userSelectedActiveReq.length === 0 ? true : false}
+                  typeOf={"primary"}
+                />
+              }
+            />
           </div>
         </div>
       </div>
 
       <div className=" ">
-        <div className="py-2 font-normal flex items-center justify-between">
+        <div className="pt-1 pb-2 font-normal flex items-center justify-between">
           <div>
             <p>{selectedRequest?.title}</p>
           </div>
           <div className=" flex">
             <div>
-              <Btn text={"Save"} icon={<SaveIcon />} />
+              <Btn
+                disabled={selectedRequest ? false : true}
+                text={"Save"}
+                icon={<SaveIcon />}
+              />
             </div>
             <div>
               <ModalComponent
@@ -186,7 +204,10 @@ const WorkspaceSection: React.FC<Props> = () => {
               />
             </div>
             <div>
-              <Btn icon={<CommentIcon />} />
+              <Btn
+                disabled={selectedRequest ? false : true}
+                icon={<CommentIcon />}
+              />
             </div>
           </div>
         </div>
@@ -210,6 +231,9 @@ const WorkspaceSection: React.FC<Props> = () => {
           selectedRequestIndex={selectedRequestIndex}
           selectedRequest={selectedRequest}
         />
+      </div>
+      <div className="pb-2 ">
+        <p>Response</p>
       </div>
       <div className="flex-grow">
         {Object.keys(response).length > 0 ? (

@@ -40,8 +40,9 @@ const RequestInputBar: React.FC<Props> = ({
   const selectBefore = (
     <Select
       onChange={handleSelectChangeReq}
-      defaultValue={option1}
+      // defaultValue={""}
       value={selectedRequest?.method.toUpperCase()}
+      disabled={selectedRequest ? false : true}
     >
       <Option value={option1}>{option1}</Option>
       <Option value={option2}>{option2}</Option>
@@ -61,8 +62,6 @@ const RequestInputBar: React.FC<Props> = ({
         reqHeader
       );
       setIsLoading(false);
-      // const jsonResponse = JSON.stringify(response, null, 6);
-      // console.log(response);
       updateRequest(
         activeWorkspaceId,
         selectedRequestIndex,
@@ -70,7 +69,7 @@ const RequestInputBar: React.FC<Props> = ({
         response
       );
     }
-    console.log(selectedRequest);
+
   };
 
   return (
@@ -80,9 +79,10 @@ const RequestInputBar: React.FC<Props> = ({
         enterButton={"SEND"}
         placeholder="Your API Endpoint Here..."
         size="large"
-        className="ant-searchbar"
+        className={`${selectedRequest ? "ant-searchbar" : "ant-searchbar1"}`}
         onSearch={handleSend}
         value={selectedRequest?.endPoint || ""}
+        disabled={selectedRequest ? false : true}
         onChange={(e) => {
           updateRequest(
             activeWorkspaceId,

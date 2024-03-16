@@ -1,5 +1,5 @@
 import { FC } from "react";
-import DrawerLeft from "../Common/Drawer/Drawer";
+// import DrawerLeft from "../Common/Drawer/Drawer";
 import { ArrowBackIcon, SettingsIcon } from "../Common/Icons/Icons";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
@@ -11,8 +11,8 @@ interface WorkspaceNavSmProps {
   activeWorkspace: workspaceHelpers.Workspace;
 }
 
-const WorkspaceNavSm: FC<WorkspaceNavSmProps> = ({ activeWorkspace }) => {
-  const { isDark, setIsDark } = useUiContext();
+const WorkspaceNavSm: FC<WorkspaceNavSmProps> = () => {
+  const { setIsDark } = useUiContext();
   return (
     <div className="flex justify-between">
       <div className=" flex items-center pt-4 pb-2">
@@ -22,7 +22,7 @@ const WorkspaceNavSm: FC<WorkspaceNavSmProps> = ({ activeWorkspace }) => {
           </Link>
         </div>
         <div className="block sm:hidden">
-          <DrawerLeft activeWorkspace={activeWorkspace} isDark={isDark} />
+          {/* <DrawerLeft activeWorkspace={activeWorkspace} isDark={isDark} /> */}
         </div>
       </div>
       <div className="">

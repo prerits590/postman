@@ -16,6 +16,7 @@ interface Props {
     value: string
   ) => void;
   workspaceId: string;
+  disabled?: boolean;
 }
 
 const TextAreaWrapper: React.FC<Props> = ({
@@ -24,6 +25,7 @@ const TextAreaWrapper: React.FC<Props> = ({
   selectedRequest,
   updateRequest,
   workspaceId,
+  disabled,
 }) => {
   const [body, setBody] = useState(selectedRequest?.reqBody || "");
   const [warning, setWarning] = useState(false);
@@ -50,6 +52,7 @@ const TextAreaWrapper: React.FC<Props> = ({
           placeholder={placeholderText}
           rows={4}
           value={body}
+          disabled={disabled}
         />
       </div>
       <div className="absolute top-2 px-2 right-0">

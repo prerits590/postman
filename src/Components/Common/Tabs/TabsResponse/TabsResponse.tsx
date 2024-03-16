@@ -1,10 +1,12 @@
 import { Tabs } from "antd";
 import { useState } from "react";
 import Item from "antd/es/list/Item";
-import { AxiosResponse } from "axios";
+// import { AxiosResponse } from "axios";
 import Loader from "../../Loader/Loader";
+import { workspaceHelpers } from "../../../../Entities";
+import Btn from "../../Buttons/Btn/Btn";
 interface props {
-  data: AxiosResponse;
+  data: workspaceHelpers.ApiReponse;
   isLoading: boolean;
 }
 const TabsResponse: React.FC<props> = ({ data, isLoading }) => {
@@ -38,13 +40,20 @@ const TabsResponse: React.FC<props> = ({ data, isLoading }) => {
   };
 
   const renderBody = () => {
-    return <div className="">{data ? data.data : ""}</div>;
+    return (
+      <div className="">
+        {data.error ? (
+          <pre>{JSON.stringify(data.error, null, 2)}</pre>
+        ) : (
+          <pre>{JSON.stringify(data.data, null, 2)}</pre>
+        )}
+      </div>
+    );
   };
 
   const handleTabChange = (key: string) => {
     setActiveTab(key);
   };
-
   return (
     <>
       {isLoading ? (
@@ -52,12 +61,12 @@ const TabsResponse: React.FC<props> = ({ data, isLoading }) => {
           <Loader />
         </div>
       ) : (
-        <div className="m-0 w-full border border-gray-500 px-2 rounded-2xl h-full flex flex-col justify-center">
+        <div className="m-0 w-full py-2 border border-gray-500 px-2 rounded-2xl h-full flex flex-row justify-center">
           <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey="2"
             activeKey={activeTab}
             onChange={handleTabChange}
-            className="m-0 w-full p-0 font-bold p-0 w-full  h-full "
+            className="m-0 w-full p-0 font-bold w-full h-full overflow-auto"
             indicator={{ size: 80 }}
           >
             <Item
@@ -66,7 +75,7 @@ const TabsResponse: React.FC<props> = ({ data, isLoading }) => {
             >
               {formatParams()}
             </Item>
-            <Item tab={`Body ${data.data ? "(1)" : ""}`} key="2 ">
+            <Item tab={`Body ${data.data || data.error ? "(1)" : ""}`} key="2 ">
               {renderBody()}
             </Item>
             <Item
@@ -76,6 +85,7 @@ const TabsResponse: React.FC<props> = ({ data, isLoading }) => {
               {formatHeaders()}
             </Item>
           </Tabs>
+          <Btn typeOf={"primary"} text={"Save Responses"} />
         </div>
       )}
     </>
